@@ -82,9 +82,33 @@ const getUniquePost=async(req:Request,res:Response)=>{
     }
 
 }
+const getAllPostBySearch=async(req:Request,res:Response)=>{
+    
+    try {
+        
+        const {search}=req.query
+        const searchString= typeof search == "string"? search:undefined
+
+        const result = await postService.findAllPostBySearch(searchString as string)
+        res.status(200).json({
+                success:true,
+                message:'get all post successfully',
+                data:result
+            })
+
+    } catch (error:any) {
+        res.status(404).json({
+                success:false,
+                message:'post does not found',
+                data:error.message
+            })
+    }
+
+}
 export const postController={
     createPost,
     getAllPost,
-    getUniquePost
+    getUniquePost,
+    getAllPostBySearch
 
 }
