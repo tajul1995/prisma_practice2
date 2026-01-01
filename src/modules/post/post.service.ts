@@ -1,4 +1,5 @@
 import { Post } from "../../../generated/prisma/client";
+import { PostWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
 
 
@@ -25,11 +26,12 @@ const getUniquePost= async(id:string)=>{
     return result
 }
 
-const findAllPostBySearch = async(data:string,tags:string[])=>{
-    const result= await prisma.post.findMany({
-        where:{
+const findAllPostBySearch = async(data:string,tags:string[]|[])=>{
+    const andCondition:PostWhereInput[]=[]
 
-            OR:[
+if(data){
+    andCondition.push({
+                    OR:[
                 {
 
                 title:{
@@ -52,9 +54,30 @@ const findAllPostBySearch = async(data:string,tags:string[])=>{
                     }
                 }
             ],
+                })
+}
+
+if(tags){
+andCondition.push({
             tags:{
             hasEvery:tags
             }
+                })
+}
+
+    const result= await prisma.post.findMany({
+
+        
+
+
+
+
+
+        where:{
+            AND:andCondition
+
+            
+            
             }
 
         
