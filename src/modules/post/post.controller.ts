@@ -87,10 +87,12 @@ const getAllPostBySearch=async(req:Request,res:Response)=>{
     try {
         
         const {search}=req.query
+        const isFeatured=req.query.isFeatured?req.query.isFeatured==='true':undefined
+        
         const searchString= typeof search == "string"? search:undefined
         const tags=req.query.tags?(req.query.tags as string).split(','):[]
 
-        const result = await postService.findAllPostBySearch(searchString as string,tags as string[])
+        const result = await postService.findAllPostBySearch(searchString as string,tags as string[],isFeatured )
         res.status(200).json({
                 success:true,
                 message:'get all post successfully',

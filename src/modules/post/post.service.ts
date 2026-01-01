@@ -26,8 +26,9 @@ const getUniquePost= async(id:string)=>{
     return result
 }
 
-const findAllPostBySearch = async(data:string,tags:string[]|[])=>{
+const findAllPostBySearch = async(data:string,tags:string[]|[],isFeatured : boolean|undefined)=>{
     const andCondition:PostWhereInput[]=[]
+    
 
 if(data){
     andCondition.push({
@@ -57,7 +58,7 @@ if(data){
                 })
 }
 
-if(tags){
+if(tags.length>0){
 andCondition.push({
             tags:{
             hasEvery:tags
@@ -65,23 +66,27 @@ andCondition.push({
                 })
 }
 
+if(typeof isFeatured ==='boolean'){
+    andCondition.push({isFeatured})
+}
+
     const result= await prisma.post.findMany({
+                        where:{
+            AND:andCondition}})
 
+            
+            
+            
+
+        
+    
         
 
 
 
 
 
-        where:{
-            AND:andCondition
-
-            
-            
-            }
-
         
-    })
     return result
 
 
