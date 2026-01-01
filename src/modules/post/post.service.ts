@@ -25,33 +25,36 @@ const getUniquePost= async(id:string)=>{
     return result
 }
 
-const findAllPostBySearch = async(data:string)=>{
+const findAllPostBySearch = async(data:string,tags:string[])=>{
     const result= await prisma.post.findMany({
         where:{
 
             OR:[
                 {
 
-                    title:{
+                title:{
                 contains:data,
                 mode:"insensitive"
             },
 
                 },
                 {
-                    content:{
+                content:{
                 contains:data,
                 mode:"insensitive"
             },
                 },
                 {
                     tags:{
-                        has:data,
+                    has:data,
                         
 
                     }
                 }
-            ]
+            ],
+            tags:{
+            hasEvery:tags
+            }
             }
 
         
