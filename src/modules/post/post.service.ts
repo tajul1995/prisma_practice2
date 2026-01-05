@@ -26,7 +26,7 @@ const getUniquePost= async(id:string)=>{
     return result
 }
 
-const findAllPostBySearch = async(data:string,tags:string[]|[],isFeatured : boolean|undefined,status:PostStatus |undefined)=>{
+const findAllPostBySearch = async(data:string,tags:string[]|[],isFeatured : boolean|undefined,status:PostStatus |undefined,page:number,limit:number,skip:number,sortBy:string ,sortOrder:string)=>{
     const andCondition:PostWhereInput[]=[]
     
 
@@ -74,10 +74,28 @@ if(status){
     andCondition.push({status})
 }
     const result= await prisma.post.findMany({
-                        where:{
-            AND:andCondition}})
+        take:limit,
+        skip,
+        where:{
+            AND:andCondition},
 
-             return result
+            orderBy:{
+                [sortBy]:sortOrder
+            }
+        
+        
+        })
+        const count= await prisma.post.count({
+             where:{
+            AND:andCondition},
+        })
+
+             return {
+                data:result,
+                pagination:{
+                    total:count
+                }
+             }
             
        }
 export const postService={
